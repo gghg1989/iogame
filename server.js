@@ -19,8 +19,7 @@ server.listen(5000, function() {
 });
 
 var players = {};
-
-io.on('connection', function() {
+io.on('connection', function(socket) {
 	socket.on('new player', function(data) {
 		players[socket.id] = {
 			name: data,

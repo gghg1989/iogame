@@ -35,7 +35,7 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('keyup', function(e) {
 	switch (e.keyCode) {
 		case 65: // A
-			movement.left = fa;
+			movement.left = false;
 			break;
 		case 87: // W
 			movement.up = false;
@@ -59,3 +59,18 @@ setInterval(function() {
 
 // Render game status
 var canvas = document.getElementById('canvas');
+canvas.width = 800;
+canvas.height = 600;
+var ctx = canvas.getContext('2d');
+socket.on('state', function(players) {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = 'black';
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = 'green';
+	for (var id in players) {
+		var player = players[id];
+		ctx.beginPath();
+		ctx.arc(player.x, player.y, 10, 0, 2*Math.PI);
+		ctx.fill();
+	}
+});
