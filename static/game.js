@@ -72,7 +72,7 @@ socket.on('state', function(players) {
 	for (var id in players) {
 		var player = players[id];
 		ctx.font = "12px Arial";
-		ctx.fillText(player.name, player.x-8 , player.y-10);
+		ctx.fillText(player.name, player.x-(ctx.measureText(player.name).width/2), player.y-15);
 		ctx.beginPath();
 		ctx.arc(player.x, player.y, 10, 0, 2*Math.PI);
 		ctx.fill();
