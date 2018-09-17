@@ -52,6 +52,8 @@ document.addEventListener('keyup', function(e) {
 // Send player's name when new player join
 socket.emit('new player', playerName);
 
+var lastUpdateTime = (new data()).getTime();
+
 // Send User Input per 1/60 second
 setInterval(function() {
 	socket.emit('movement', movement);
