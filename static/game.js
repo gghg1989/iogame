@@ -52,7 +52,7 @@ document.addEventListener('keyup', function(e) {
 // Send player's name when new player join
 socket.emit('new player', playerName);
 
-var lastUpdateTime = (new data()).getTime();
+// var lastUpdateTime = (new data()).getTime();
 
 // Send User Input per 1/60 second
 setInterval(function() {
@@ -71,6 +71,8 @@ socket.on('state', function(players) {
 	ctx.fillStyle = 'green';
 	for (var id in players) {
 		var player = players[id];
+		ctx.font = "12px Arial";
+		ctx.fillText(player.name, player.x-8 , player.y-10);
 		ctx.beginPath();
 		ctx.arc(player.x, player.y, 10, 0, 2*Math.PI);
 		ctx.fill();
