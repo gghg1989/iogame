@@ -54,6 +54,9 @@ socket.emit('new player', playerName);
 
 // var lastUpdateTime = (new data()).getTime();
 
+// Set plater's color
+var playerColor = getRandomColor();
+
 // Send User Input per 1/60 second
 setInterval(function() {
 	socket.emit('movement', movement);
@@ -68,7 +71,7 @@ socket.on('state', function(players) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = 'black';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = 'green';
+	ctx.fillStyle = playerColor;
 	for (var id in players) {
 		var player = players[id];
 		ctx.font = "12px Arial";
