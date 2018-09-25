@@ -20,8 +20,6 @@ server.listen(5000, function() {
 
 var players = {};
 
-var playerControl = {};
-
 var lastUpdateTime = (new Date()).getTime();
 
 io.on('connection', function(socket) {
@@ -35,7 +33,23 @@ io.on('connection', function(socket) {
 
 	socket.on('movement', function(data) {
 		var player = players[socket.id] || {};
-		playerControl = data;		
+		setInterval(function() {
+			var currentTime = (new Date()).getTime();
+			var timeDifference = currentTime - lastUpdateTime;
+			if (data.left) {
+				player.x -= 5*timeDifference;
+			}
+			if (data.up) {
+				player.y -= 5*timeDifference;
+			}
+			if (data.right) {
+				player.x += 5*timeDifference;
+			}
+			if (data.down) {
+				player.y += 5*timeDifference;
+			}
+			lastUpdateTime = currentTime;
+		}, 1000/60);
 	});
 
 	socket.on('disconnect', function() {
@@ -44,22 +58,6 @@ io.on('connection', function(socket) {
 });
 
 setInterval(function() {
-	var currentTime = (new Date()).getTime();
-	var timeDifference = currentTime - lastUpdateTime;
-	console.log(playerControl);
-	if (playerControl.left) {
-		player.x -= 5*timeDifference;
-	}
-	if (playerControl.up) {
-		player.y -= 5*timeDifference;
-	}
-	if (playerControl.right) {
-		player.x += 5*timeDifference;
-	}
-	if (playerControl.down) {
-		player.y += 5*timeDifference;
-	}
 	io.sockets.emit('state', players);
-	lastUpdateTime = currentTime;
 }, 1000/60);
 
