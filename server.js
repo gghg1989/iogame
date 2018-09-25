@@ -25,10 +25,10 @@ var players = {};
 var foodList = [];
 
 for (var i = 0; i < MAX_FOOD; i++) {
-	var food_x = Math.floor((Math.random() * 500) + 1);
-	var food_y = Math.floor((Math.random() * 500) + 1);
+	var food_x = Math.floor((Math.random() * 800) + 1);
+	var food_y = Math.floor((Math.random() * 600) + 1);
 	foodList.push({
-		x:food_x,
+		x: food_x,
 		y: food_y
 	});
 }
@@ -43,7 +43,8 @@ io.on('connection', function(socket) {
 		players[socket.id] = {
 			name: data,
 			x: 300,
-			y: 300
+			y: 300,
+			r: 10
 		};
 	});
 
@@ -61,6 +62,19 @@ io.on('connection', function(socket) {
 		if (data.down) {
 			player.y += 5;
 		}
+
+		for(var foodId in foodList) {
+			var food = foodList[foodId];
+			var dx = food.x - player.x;
+			var dy = food.y - player.y;
+			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+3)) {
+				player.r++;
+				foodList[foodId].x = Math.floor((Math.random() * 800) + 1);
+				foodList[foodId].y = Math.floor((Math.random() * 600) + 1);
+			}
+		}
+
+		
 	});
 
 	socket.on('disconnect', function() {

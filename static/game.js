@@ -68,7 +68,6 @@ canvas.width = 800;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
 socket.on('state', function(gameState) {
-	console.log(gameState)
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = 'black';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -85,7 +84,7 @@ socket.on('state', function(gameState) {
 		ctx.font = "12px Arial";
 		ctx.fillText(player.name, player.x-(ctx.measureText(player.name).width/2), player.y-15);
 		ctx.beginPath();
-		ctx.arc(player.x, player.y, 10, 0, 2*Math.PI);
+		ctx.arc(player.x, player.y, player.r, 0, 2*Math.PI);
 		ctx.fill();
 	}
 });
