@@ -40,6 +40,15 @@ var gameState = {
 
 io.on('connection', function(socket) {
 	socket.on('new player', function(data) {
+		for(var id in players) {
+			var p = players[id];
+			if (data == p.name) {
+				console.log();
+				var lastThreeDigit = parseInt(data.substr(data.length - 3));
+				var suffix = isNaN(lastThreeDigit)?0:(suffix+1);
+				data = data + "00" + suffix;
+			}
+		}
 		players[socket.id] = {
 			name: data,
 			x: 300,
@@ -70,11 +79,30 @@ io.on('connection', function(socket) {
 			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+3)) {
 				player.r++;
 				foodList[foodId].x = Math.floor((Math.random() * 800) + 1);
-				foodList[foodId].y = Math.floor((Math.random() * 600) + 1);
 			}
 		}
 
-		
+		for(var id in players) {
+			var e = players[id];
+			if (e.name == player.name) {
+				break;
+			}
+			var dx = e.x - player.x;
+			var dy = e.y - player.y;
+			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+e.r)) {
+				if (player.r > e.r) {
+					player.r += e.r;
+					players[id].x = Math.floor((Math.random() * 800) + 1);
+					players[id].y = Math.floor((Math.random() * 600) + 1);
+				}
+				else {
+					e.r += player.r;
+					player.x = Math.floor((Math.random() * 800) + 1);
+					player.y = Math.floor((Math.random() * 600) + 1);
+					player.r = 10;
+				}
+			}
+		}
 	});
 
 	socket.on('disconnect', function() {
