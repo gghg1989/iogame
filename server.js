@@ -18,7 +18,25 @@ server.listen(5000, function() {
 	console.log('Starting server on port 5000...');
 });
 
+const MAX_FOOD = 100;
+
 var players = {};
+
+var foodList = [];
+
+for (var i = 0; i < MAX_FOOD; i++) {
+	var food_x = Math.floor((Math.random() * 500) + 1);
+	var food_y = Math.floor((Math.random() * 500) + 1);
+	foodList.push({
+		x:food_x,
+		y: food_y
+	});
+}
+
+var gameState = {
+	players: players,
+	foods: foodList
+}
 
 io.on('connection', function(socket) {
 	socket.on('new player', function(data) {
@@ -51,6 +69,6 @@ io.on('connection', function(socket) {
 });
 
 setInterval(function() {
-	io.sockets.emit('state', players);
+	io.sockets.emit('state', gameState);
 }, 1000/60);
 

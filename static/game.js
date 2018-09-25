@@ -67,13 +67,21 @@ var canvas = document.getElementById('canvas');
 canvas.width = 800;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
-socket.on('state', function(players) {
+socket.on('state', function(gameState) {
+	console.log(gameState)
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = 'black';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "#AAAAAA";
+	for (var foodId in gameState.foods) {
+		var food = gameState.foods[foodId];
+		ctx.beginPath();
+		ctx.arc(food.x, food.y, 3, 0, 2*Math.PI);
+		ctx.fill();
+	}
 	ctx.fillStyle = playerColor;
-	for (var id in players) {
-		var player = players[id];
+	for (var id in gameState.players) {
+		var player = gameState.players[id];
 		ctx.font = "12px Arial";
 		ctx.fillText(player.name, player.x-(ctx.measureText(player.name).width/2), player.y-15);
 		ctx.beginPath();
