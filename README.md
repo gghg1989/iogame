@@ -6,3 +6,5 @@
 * Draw players with image
 * Draw animations
 * Implement basic engine structure
+* Enable collision
+
