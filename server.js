@@ -59,6 +59,8 @@ io.on('connection', function(socket) {
 
 	socket.on('movement', function(data) {
 		var player = players[socket.id] || {};
+
+		// Move player basing on client signal
 		if (data.left) {
 			player.x -= 5;
 		}
@@ -72,16 +74,20 @@ io.on('connection', function(socket) {
 			player.y += 5;
 		}
 
-		for(var foodId in foodList) {
-			var food = foodList[foodId];
-			var dx = food.x - player.x;
-			var dy = food.y - player.y;
-			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+3)) {
-				player.r++;
-				foodList[foodId].x = Math.floor((Math.random() * 800) + 1);
-			}
+		// Set boundaries for player
+		if (player.x < 0) {
+			player.x = player.r;
 		}
-
+		if (player.x > 800) {
+			player.x = 800;
+		}
+		if (player.y < 0) {
+			player.y = player.r;
+		}
+		if (player.y > 600) {
+			player.y = 600;
+		}
+		
 		for(var id in players) {
 			var e = players[id];
 			if (e.name == player.name) {
@@ -89,6 +95,8 @@ io.on('connection', function(socket) {
 			}
 			var dx = e.x - player.x;
 			var dy = e.y - player.y;
+			
+			// Respawn player when be killed
 			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+e.r)) {
 				if (player.r > e.r) {
 					player.r += e.r;
@@ -103,6 +111,23 @@ io.on('connection', function(socket) {
 				}
 			}
 		}
+
+		for(var foodId in foodList) {
+			var food = foodList[foodId];
+			var dx = food.x - player.x;
+			var dy = food.y - player.y;
+			if (Math.sqrt(dx*dx + dy*dy) <= (player.r+3)) {
+				// Grow player size exponentially
+				player.r += Math.pow(0.95, player.r);
+				// Limit max player size
+				if (player.r >= 300) {
+					player.r = 300;
+				}
+				foodList[foodId].x = Math.floor((Math.random() * 800) + 1);
+				foodList[foodId].y = Math.floor((Math.random() * 600) + 1);
+			}
+		}
+
 	});
 
 	socket.on('disconnect', function() {
